@@ -17,7 +17,7 @@ public class RegisterPatientService implements RegisterPatientUseCase {
 
 	@Override
 	public Long register(Patient patient) {
-		var existingPatient = loadPatientByDocumentPort.load(patient.document());
+		var existingPatient = loadPatientByDocumentPort.load(patient.getDocument());
 
 		if (existingPatient.isPresent()) {
 			throw new PatientExistsException("patient already exists");
