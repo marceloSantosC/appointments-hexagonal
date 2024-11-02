@@ -1,5 +1,7 @@
 package com.example.appointments.application.domain.model;
 
+import java.util.Objects;
+
 import lombok.Getter;
 
 @Getter
@@ -24,13 +26,32 @@ public class Doctor {
 	public Doctor(Long id, String name, String speciality, String phone, String secondaryPhone, String email,
 			String crm, String document) {
 		this.id = id;
-		this.name = name;
-		this.speciality = speciality;
-		this.phone = phone;
+		this.name = Objects.requireNonNull(name);
+		this.speciality = Objects.requireNonNull(speciality);
+		this.phone = Objects.requireNonNull(phone);
 		this.secondaryPhone = secondaryPhone;
-		this.email = email;
-		this.crm = crm;
-		this.document = document;
+		this.email = Objects.requireNonNull(email);
+		this.crm = Objects.requireNonNull(crm);
+		this.document = Objects.requireNonNull(document);
 	}
 
+	public void setName(String name) {
+		if (name != null)
+			this.name = name;
+	}
+
+	public void setPhone(String phone) {
+		if (phone != null)
+			this.phone = phone;
+	}
+
+	public void setSecondaryPhone(String secondaryPhone) {
+		if (secondaryPhone != null)
+			this.secondaryPhone = secondaryPhone;
+	}
+
+	public void setEmail(String email) {
+		if (email != null)
+			this.email = email;
+	}
 }
