@@ -1,10 +1,13 @@
 package com.example.appointments.application.domain.model;
 
+import java.time.LocalTime;
 import java.util.Objects;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Doctor {
 
 	private final Long id;
@@ -23,8 +26,12 @@ public class Doctor {
 
 	private final String document;
 
+	private LocalTime workingHourStart;
+
+	private LocalTime workingHourEnd;
+
 	public Doctor(Long id, String name, String speciality, String phone, String secondaryPhone, String email,
-			String crm, String document) {
+			String crm, String document, LocalTime workingHourStart, LocalTime workingHourEnd) {
 		this.id = id;
 		this.name = Objects.requireNonNull(name);
 		this.speciality = Objects.requireNonNull(speciality);
@@ -33,6 +40,8 @@ public class Doctor {
 		this.email = Objects.requireNonNull(email);
 		this.crm = Objects.requireNonNull(crm);
 		this.document = Objects.requireNonNull(document);
+		this.workingHourStart = Objects.requireNonNull(workingHourStart);
+		this.workingHourEnd = Objects.requireNonNull(workingHourEnd);
 	}
 
 	public void setName(String name) {

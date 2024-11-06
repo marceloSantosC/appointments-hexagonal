@@ -12,8 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.appointments.application.domain.model.Patient;
-import com.example.appointments.application.port.out.LoadPatientByDocumentPort;
-import com.example.appointments.application.port.out.LoadPatientByIdPort;
+import com.example.appointments.application.port.out.PatientPersistencePort;
 
 @ExtendWith(MockitoExtension.class)
 class GetPatientInfoServiceTest {
@@ -22,10 +21,7 @@ class GetPatientInfoServiceTest {
 	private GetPatientInfoService getPatientInfoService;
 
 	@Mock
-	private LoadPatientByIdPort loadPatientById;
-
-	@Mock
-	private LoadPatientByDocumentPort loadPatientByDocument;
+	private PatientPersistencePort patientPersistencePort;
 
 	@Test
 	void should_get_patient_info_by_id() {
@@ -33,12 +29,12 @@ class GetPatientInfoServiceTest {
 		var patient = new Patient("Jhon Doe", "12345678909", LocalDate.parse("2000-10-10"), "Lorem Ipsum",
 				"11912341234", null, "test@email.com");
 		patient.setId(id);
-		doReturn(Optional.of(patient)).when(loadPatientById).load(patient.getId());
+		doReturn(Optional.of(patient)).when(patientPersistencePort).loadById(patient.getId());
 
 		getPatientInfoService.getPatientInfo(id, null);
 
-		verify(loadPatientById).load(id);
-		verify(loadPatientByDocument, never()).load(anyString());
+		verify(patientPersistencePort).loadById(id);
+		verify(patientPersistencePort, never()).loadByDocument(anyString());
 	}
 
 	@Test
@@ -47,12 +43,12 @@ class GetPatientInfoServiceTest {
 		var patient = new Patient("Jhon Doe", document, LocalDate.parse("2000-10-10"), "Lorem Ipsum", "11912341234",
 				null, "test@email.com");
 		patient.setId(1L);
-		doReturn(Optional.of(patient)).when(loadPatientByDocument).load(patient.getDocument());
+		doReturn(Optional.of(patient)).when(patientPersistencePort).loadByDocument(patient.getDocument());
 
 		getPatientInfoService.getPatientInfo(null, patient.getDocument());
 
-		verify(loadPatientById, never()).load(anyLong());
-		verify(loadPatientByDocument).load(document);
+		verify(patientPersistencePort, never()).loadById(anyLong());
+		verify(patientPersistencePort).loadByDocument(document);
 	}
 
 }

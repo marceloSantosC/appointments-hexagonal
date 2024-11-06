@@ -3,6 +3,7 @@ package com.example.appointments.application.domain.service;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.appointments.application.domain.exception.DoctorExistsException;
 import com.example.appointments.application.domain.model.Doctor;
-import com.example.appointments.application.port.out.LoadDoctorByDocumentPort;
-import com.example.appointments.application.port.out.SaveDoctorPort;
+import com.example.appointments.application.port.out.DoctorPersistencePort;
 
 @ExtendWith(MockitoExtension.class)
 class RegisterDoctorServiceTest {
@@ -23,34 +23,31 @@ class RegisterDoctorServiceTest {
 	private RegisterDoctorService service;
 
 	@Mock
-	private SaveDoctorPort saveDoctor;
-
-	@Mock
-	private LoadDoctorByDocumentPort loadDoctorByDocument;
+	private DoctorPersistencePort doctorPersistencePort;
 
 	@Test
 	void should_register_doctor() {
 		Doctor doctor = new Doctor(1L, "Jhon", "Generalist", "11912341234", null, "jhon@email.com", "CRM/SP 123456",
-				"12345678909");
-		doReturn(Optional.empty()).when(loadDoctorByDocument).load(doctor.getDocument());
-		doReturn(1L).when(saveDoctor).save(doctor);
+				"12345678909", LocalTime.MIN, LocalTime.MAX);
+		doReturn(Optional.empty()).when(doctorPersistencePort).loadByDocument(doctor.getDocument());
+		doReturn(1L).when(doctorPersistencePort).save(doctor);
 
 		service.register(doctor);
 
-		verify(loadDoctorByDocument).load(doctor.getDocument());
-		verify(saveDoctor).save(doctor);
+		verify(doctorPersistencePort).loadByDocument(doctor.getDocument());
+		verify(doctorPersistencePort).save(doctor);
 	}
 
 	@Test
 	void should_not_register_existing_doctor() {
 		Doctor doctor = new Doctor(1L, "Jhon", "Generalist", "11912341234", null, "jhon@email.com", "CRM/SP 123456",
-				"12345678909");
-		doReturn(Optional.of(doctor)).when(loadDoctorByDocument).load(doctor.getDocument());
+				"12345678909", LocalTime.MIN, LocalTime.MAX);
+		doReturn(Optional.of(doctor)).when(doctorPersistencePort).loadByDocument(doctor.getDocument());
 
 		assertThrows(DoctorExistsException.class, () -> service.register(doctor));
 
-		verify(loadDoctorByDocument).load(doctor.getDocument());
-		verify(saveDoctor, never()).save(doctor);
+		verify(doctorPersistencePort).loadByDocument(doctor.getDocument());
+		verify(doctorPersistencePort, never()).save(doctor);
 	}
 
 }

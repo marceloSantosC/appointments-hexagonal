@@ -14,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.appointments.application.domain.exception.PatientExistsException;
 import com.example.appointments.application.domain.model.Patient;
-import com.example.appointments.application.port.out.LoadPatientByDocumentPort;
-import com.example.appointments.application.port.out.SavePatientPort;
+import com.example.appointments.application.port.out.PatientPersistencePort;
 
 @ExtendWith(MockitoExtension.class)
 class RegisterPatientServiceTest {
@@ -24,10 +23,7 @@ class RegisterPatientServiceTest {
 	private RegisterPatientService service;
 
 	@Mock
-	private SavePatientPort savePatient;
-
-	@Mock
-	private LoadPatientByDocumentPort loadPatientByDocument;
+	private PatientPersistencePort patientPersistencePort;
 
 	@Test
 	void should_register_patient() {
@@ -35,13 +31,13 @@ class RegisterPatientServiceTest {
 		var patient = new Patient("Jhon Doe", "12345678909", LocalDate.parse("2000-10-10"), "Lorem Ipsum",
 				"11912341234", null, "test@email.com");
 
-		doReturn(Optional.empty()).when(loadPatientByDocument).load(patient.getDocument());
-		doReturn(1L).when(savePatient).save(patient);
+		doReturn(Optional.empty()).when(patientPersistencePort).loadByDocument(patient.getDocument());
+		doReturn(1L).when(patientPersistencePort).save(patient);
 
 		service.register(patient);
 
-		verify(loadPatientByDocument).load(patient.getDocument());
-		verify(savePatient).save(patient);
+		verify(patientPersistencePort).loadByDocument(patient.getDocument());
+		verify(patientPersistencePort).save(patient);
 
 	}
 
@@ -51,12 +47,12 @@ class RegisterPatientServiceTest {
 		var patient = new Patient("Jhon Doe", "12345678909", LocalDate.parse("2000-10-10"), "Lorem Ipsum",
 				"11912341234", null, "test@email.com");
 
-		doReturn(Optional.of(patient)).when(loadPatientByDocument).load(patient.getDocument());
+		doReturn(Optional.of(patient)).when(patientPersistencePort).loadByDocument(patient.getDocument());
 
 		assertThrows(PatientExistsException.class, () -> service.register(patient));
 
-		verify(loadPatientByDocument).load(patient.getDocument());
-		verify(savePatient, never()).save(patient);
+		verify(patientPersistencePort).loadByDocument(patient.getDocument());
+		verify(patientPersistencePort, never()).save(patient);
 	}
 
 }

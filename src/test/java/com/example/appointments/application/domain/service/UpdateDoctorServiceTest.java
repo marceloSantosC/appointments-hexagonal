@@ -3,6 +3,7 @@ package com.example.appointments.application.domain.service;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.appointments.application.domain.exception.DoctorDoesNotExistsException;
 import com.example.appointments.application.domain.model.Doctor;
 import com.example.appointments.application.port.in.model.UpdateDoctorModel;
-import com.example.appointments.application.port.out.LoadDoctorByIdPort;
-import com.example.appointments.application.port.out.UpdateDoctorPort;
+import com.example.appointments.application.port.out.DoctorPersistencePort;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateDoctorServiceTest {
@@ -24,10 +24,7 @@ class UpdateDoctorServiceTest {
 	private UpdateDoctorService service;
 
 	@Mock
-	private LoadDoctorByIdPort loadDoctorById;
-
-	@Mock
-	private UpdateDoctorPort updateDoctor;
+	private DoctorPersistencePort doctorPersistencePort;
 
 	@Test
 	void should_update_doctor_info() {
@@ -36,13 +33,13 @@ class UpdateDoctorServiceTest {
 		var updateModel = new UpdateDoctorModel("Jhon J Doe", "11912341235", "11912341234", "jhonj@email.com");
 
 		var doctor = new Doctor(id, "Jhon", "Generalist", "11912341234", null, "jhon@email.com", "CRM/SP 123456",
-				"12345678909");
-		doReturn(Optional.of(doctor)).when(loadDoctorById).load(doctor.getId());
+				"12345678909", LocalTime.MIN, LocalTime.MAX);
+		doReturn(Optional.of(doctor)).when(doctorPersistencePort).loadById(doctor.getId());
 
 		service.update(id, updateModel);
 
-		verify(loadDoctorById).load(id);
-		verify(updateDoctor).update(doctor);
+		verify(doctorPersistencePort).loadById(id);
+		verify(doctorPersistencePort).update(doctor);
 	}
 
 	@Test
@@ -50,12 +47,12 @@ class UpdateDoctorServiceTest {
 
 		var id = 1L;
 		var updateModel = new UpdateDoctorModel("Jhon J Doe", "11912341235", "11912341234", "jhonj@email.com");
-		doReturn(Optional.empty()).when(loadDoctorById).load(anyLong());
+		doReturn(Optional.empty()).when(doctorPersistencePort).loadById(anyLong());
 
 		assertThrows(DoctorDoesNotExistsException.class, () -> service.update(id, updateModel));
 
-		verify(loadDoctorById).load(id);
-		verify(updateDoctor, never()).update(any(Doctor.class));
+		verify(doctorPersistencePort).loadById(id);
+		verify(doctorPersistencePort, never()).update(any(Doctor.class));
 	}
 
 }
