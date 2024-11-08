@@ -38,6 +38,18 @@ public class Patient {
 		this.email = Objects.requireNonNull(email);
 	}
 
+	public Patient(Long id, String name, String document, LocalDate birthDate, String history, String phone,
+			String altPhone, String email) {
+		this.id = id;
+		this.name = Objects.requireNonNull(name);
+		this.document = Objects.requireNonNull(document);
+		this.birthDate = Objects.requireNonNull(birthDate);
+		this.history = Objects.requireNonNull(history);
+		this.phone = Objects.requireNonNull(phone);
+		this.secondaryPhone = altPhone;
+		this.email = Objects.requireNonNull(email);
+	}
+
 	public void setHistory(String history) {
 		if (history != null)
 			this.history = history;
