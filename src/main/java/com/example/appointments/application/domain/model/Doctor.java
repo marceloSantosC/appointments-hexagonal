@@ -2,6 +2,9 @@ package com.example.appointments.application.domain.model;
 
 import java.time.LocalTime;
 import java.util.Objects;
+import java.util.Optional;
+
+import com.example.appointments.application.domain.exception.DoctorException;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -62,5 +65,21 @@ public class Doctor {
 	public void setEmail(String email) {
 		if (email != null)
 			this.email = email;
+	}
+
+	public void updateWorkingHours(LocalTime start, LocalTime end) {
+		if (start == null && end == null) {
+			return;
+		}
+
+		start = Optional.ofNullable(start).orElse(workingHourStart);
+		end = Optional.ofNullable(end).orElse(workingHourEnd);
+
+		if (start.isAfter(end)) {
+			throw new DoctorException("invalid working hours: end should be after the start.");
+		}
+
+		this.workingHourStart = start;
+		this.workingHourEnd = end;
 	}
 }

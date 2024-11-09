@@ -20,6 +20,7 @@ public class UpdateDoctorService implements UpdateDoctorUseCase {
 		doctor.setEmail(model.email());
 		doctor.setSecondaryPhone(model.secondaryPhone());
 		doctor.setPhone(model.phone());
+		doctor.updateWorkingHours(model.workingHourStart(), model.workingHourEnd());
 		doctorPersistence.update(doctor);
 	}
 }
