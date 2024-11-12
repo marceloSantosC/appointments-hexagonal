@@ -43,4 +43,10 @@ public interface PatientJpaRepository extends JpaRepository<PatientEntity, Long>
 		patientEntity.setId(patient.getId());
 		save(patientEntity);
 	}
+
+	@Override
+	default boolean patientExistsById(Long id) {
+		return existsById(id);
+	}
+
 }

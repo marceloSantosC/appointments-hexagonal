@@ -45,6 +45,11 @@ public interface DoctorJpaRepository extends JpaRepository<DoctorEntity, Long>, 
 		this.save(entity);
 	}
 
+	@Override
+	default boolean doctorExistsById(Long id) {
+		return existsById(id);
+	}
+
 	// TODO: IMPLEMENTAR
 	@Override
 	default List<DoctorSchedule> loadSchedule(Long doctorId, LocalDateTime start, LocalDateTime end) {

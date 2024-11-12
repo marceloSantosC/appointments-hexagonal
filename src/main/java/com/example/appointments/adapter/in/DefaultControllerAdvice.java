@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.example.appointments.adapter.in.model.ErrorResponse;
 import com.example.appointments.application.domain.exception.DoctorException;
+import com.example.appointments.application.domain.exception.PatientException;
 
 @ControllerAdvice
 public class DefaultControllerAdvice extends ResponseEntityExceptionHandler {
@@ -31,6 +32,13 @@ public class DefaultControllerAdvice extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(DoctorException.class)
 	public ResponseEntity<ErrorResponse> handleDoctorException(DoctorException e) {
+		var status = HttpStatus.UNPROCESSABLE_ENTITY;
+		var response = new ErrorResponse(status.value(), e.getMessage(), Collections.emptyList());
+		return ResponseEntity.status(status).body(response);
+	}
+
+	@ExceptionHandler(PatientException.class)
+	public ResponseEntity<ErrorResponse> handleDoctorException(PatientException e) {
 		var status = HttpStatus.UNPROCESSABLE_ENTITY;
 		var response = new ErrorResponse(status.value(), e.getMessage(), Collections.emptyList());
 		return ResponseEntity.status(status).body(response);

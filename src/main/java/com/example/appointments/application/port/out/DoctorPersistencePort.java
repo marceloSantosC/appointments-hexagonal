@@ -19,4 +19,6 @@ public interface DoctorPersistencePort {
 
 	List<DoctorSchedule> loadSchedule(Long doctorId, LocalDateTime start, LocalDateTime end);
 
+	boolean doctorExistsById(Long id);
+
 }

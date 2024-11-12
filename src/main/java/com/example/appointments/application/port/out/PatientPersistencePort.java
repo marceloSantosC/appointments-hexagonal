@@ -14,4 +14,6 @@ public interface PatientPersistencePort {
 
 	void update(Patient patient);
 
+	boolean patientExistsById(Long id);
+
 }
