@@ -1,7 +1,5 @@
 package com.example.appointments.adapter.out.persistence;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.appointments.adapter.out.persistence.model.DoctorEntity;
 import com.example.appointments.application.domain.model.Doctor;
-import com.example.appointments.application.domain.model.DoctorSchedule;
 import com.example.appointments.application.port.out.DoctorPersistencePort;
 
 @Repository
@@ -50,9 +47,4 @@ public interface DoctorJpaRepository extends JpaRepository<DoctorEntity, Long>, 
 		return existsById(id);
 	}
 
-	// TODO: IMPLEMENTAR
-	@Override
-	default List<DoctorSchedule> loadSchedule(Long doctorId, LocalDateTime start, LocalDateTime end) {
-		return List.of();
-	}
 }

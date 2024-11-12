@@ -27,4 +27,5 @@ public interface AppointmentJpaRepository extends JpaRepository<AppointmentEntit
 		this.save(appointmentEntity);
 		return appointmentEntity.getId();
 	}
+
 }
